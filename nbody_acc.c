@@ -13,7 +13,7 @@ struct ParticleType {
 void MoveParticles(const int nParticles, struct ParticleType* const particle, const float dt) {
 
   // Loop over particles that experience force
-  #pragma acc parallel loop present(particle[0:nParticles]) async(1)
+#pragma acc parallel loop present(particle[0:nParticles]) async(1)
   for (int i = 0; i < nParticles; i++) {
 
     // Components of the gravity force on particle i
@@ -50,7 +50,7 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
 
   // Move particles according to their velocities
   // O(N) work, so using a serial loop
-  #pragma acc parallel loop present(particle[0:nParticles]) async(1)
+#pragma acc parallel loop present(particle[0:nParticles]) async(1)
   for (int i = 0 ; i < nParticles; i++) {
     particle[i].x  += particle[i].vx*dt;
     particle[i].y  += particle[i].vy*dt;
@@ -75,7 +75,7 @@ void dump(int iter, int nParticles, struct ParticleType* particle)
     f = fopen(filename, "w+");
 
     int i;
-  #pragma acc update host(particle[0:nParticles])
+#pragma acc update host(particle[0:nParticles])
     for (i = 0; i < nParticles; i++)
     {
         fprintf(f, "%e %e %e %e %e %e\n",
