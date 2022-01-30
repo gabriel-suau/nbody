@@ -1,5 +1,5 @@
-# CC := gcc
-CC := nvc
+CC := gcc -fopenmp -openacc
+# CC := nvcc -acc -fopenmp
 
 all:
 	make nbody
@@ -7,13 +7,13 @@ all:
 	make nbody_acc
 
 nbody: nbody.c
-	$(CC) nbody.c -o nbody -lm -fopenmp -fopenacc -O3
+	$(CC) nbody.c -o nbody -lm -O3
 
 nbody_omp: nbody_omp.c
-	$(CC) nbody_omp.c -o nbody_omp -lm -fopenmp -fopenacc -O3
+	$(CC) nbody_omp.c -o nbody_omp -lm -O3
 
 nbody_acc: nbody_acc.c
-	$(CC) nbody_acc.c -o nbody_acc -lm -fopenmp -fopenacc -O3
+	$(CC) nbody_acc.c -o nbody_acc -lm -O3
 
 clean:
 	rm -f nbody nbody_omp nbody_acc
