@@ -92,6 +92,7 @@ int main(const int argc, const char** argv)
   const int nSteps = (argc > 2)?atoi(argv[2]):10;
   // Particle propagation time step
   const float dt = 0.0005f;
+  float runtime = 0.0f;
 
   // File to follow 1 particle
   FILE *file;
@@ -126,6 +127,7 @@ int main(const int argc, const char** argv)
     MoveParticles(nParticles, particle, dt);
     const double tEnd = omp_get_wtime(); // End timing
 
+    runtime += tEnd - tStart;
     const float HztoInts   = ((float)nParticles)*((float)(nParticles-1)) ;
     const float HztoGFLOPs = 20.0*1e-9*((float)(nParticles))*((float)(nParticles-1));
 
@@ -151,6 +153,7 @@ int main(const int argc, const char** argv)
   printf("\033[1m%s %4s \033[42m%10.1f +- %.1f GFLOP/s\033[0m\n",
 	 "Average performance:", "", rate, dRate);
   printf("-----------------------------------------------------\n");
+  printf("Total time = %f \n", runtime);
   printf("* - warm-up, not included in average\n\n");
   free(particle);
 }
