@@ -3,7 +3,7 @@
 #include <stdlib.h> // drand48
 #include <omp.h>
 
-#define DUMP
+/* #define DUMP */
 
 struct ParticleType { 
   float x, y, z;
