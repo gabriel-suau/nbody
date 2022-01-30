@@ -14,29 +14,30 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
 
   // Loop over particles that experience force
 #pragma omp parallel for
-  for (int i = 0; i < nParticles; i++) { 
+  for (int i = 0; i < nParticles; i++) {
 
     // Components of the gravity force on particle i
-    float Fx = 0, Fy = 0, Fz = 0; 
-      
+    float Fx = 0, Fy = 0, Fz = 0;
+
     // Loop over particles that exert force
-    for (int j = 0; j < nParticles; j++) { 
+    for (int j = 0; j < nParticles; j++) {
       // No self interaction
       if (i != j) {
-        // Avoid singularity and interaction with self
-        const float softening = 1e-20;
+          // Avoid singularity and interaction with self
+          const float softening = 1e-20;
 
-        // Newton's law of universal gravity
-        const float dx = particle[j].x - particle[i].x;
-        const float dy = particle[j].y - particle[i].y;
-        const float dz = particle[j].z - particle[i].z;
-        const float drSquared  = dx*dx + dy*dy + dz*dz + softening;
-        const float drPower32  = pow(drSquared, 3.0/2.0);
-            
-        // Calculate the net force
-        Fx += dx / drPower32;  
-        Fy += dy / drPower32;  
-        Fz += dz / drPower32;
+          // Newton's law of universal gravity
+          const float dx = particle[j].x - particle[i].x;
+          const float dy = particle[j].y - particle[i].y;
+          const float dz = particle[j].z - particle[i].z;
+          const float drSquared  = dx*dx + dy*dy + dz*dz + softening;
+          // const float drPower32  = pow(drSquared, 3.0/2.0);
+          const float drPower32  = drSquared*sqrtf(drSquared);
+
+          // Calculate the net force
+          Fx += dx / drPower32;  
+          Fy += dy / drPower32;  
+          Fz += dz / drPower32;
       }
 
     }
@@ -50,7 +51,7 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
   // Move particles according to their velocities
   // O(N) work, so using a serial loop
 #pragma omp parallel for
-  for (int i = 0 ; i < nParticles; i++) { 
+  for (int i = 0 ; i < nParticles; i++) {
     particle[i].x  += particle[i].vx*dt;
     particle[i].y  += particle[i].vy*dt;
     particle[i].z  += particle[i].vz*dt;
@@ -67,21 +68,22 @@ void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle) {
 
 void dump(int iter, int nParticles, struct ParticleType* particle)
 {
-  char filename[64];
-  snprintf(filename, 64, "results/output_%d.txt", iter);
+    char filename[64];
+    snprintf(filename, 64, "results/output_%d.txt", iter);
 
-  FILE *f;
-  f = fopen(filename, "w+");
+    FILE *f;
+    f = fopen(filename, "w+");
 
-  int i;
-  for (i = 0; i < nParticles; i++)
+    int i;
+
+    for (i = 0; i < nParticles; i++)
     {
-      fprintf(f, "%e %e %e %e %e %e\n",
-              particle[i].x, particle[i].y, particle[i].z,
-              particle[i].vx, particle[i].vy, particle[i].vz);
+        fprintf(f, "%e %e %e %e %e %e\n",
+                   particle[i].x, particle[i].y, particle[i].z,
+		   particle[i].vx, particle[i].vy, particle[i].vz);
     }
 
-  fclose(f);
+    fclose(f);
 }
 
 int main(const int argc, const char** argv)
@@ -105,14 +107,14 @@ int main(const int argc, const char** argv)
 
   int i;
   for (i = 0; i < nParticles; i++)
-    {
-      particle[i].x =  2.0*drand48() - 1.0;
-      particle[i].y =  2.0*drand48() - 1.0;
-      particle[i].z =  2.0*drand48() - 1.0;
-      particle[i].vx = 2.0*drand48() - 1.0;
-      particle[i].vy = 2.0*drand48() - 1.0;
-      particle[i].vz = 2.0*drand48() - 1.0;
-    }
+  {
+     particle[i].x =  2.0*drand48() - 1.0;
+     particle[i].y =  2.0*drand48() - 1.0;
+     particle[i].z =  2.0*drand48() - 1.0;
+     particle[i].vx = 2.0*drand48() - 1.0;
+     particle[i].vy = 2.0*drand48() - 1.0;
+     particle[i].vz = 2.0*drand48() - 1.0;
+  }
 
   // Perform benchmark
   printf("\nPropagating %d particles using 1 thread...\n\n", 
@@ -121,6 +123,7 @@ int main(const int argc, const char** argv)
   double rate = 0, dRate = 0; // Benchmarking data
   const int skipSteps = 3; // Skip first iteration (warm-up)
   printf("\033[1m%5s %10s %10s %8s\033[0m\n", "Step", "Time, s", "Interact/s", "GFLOP/s"); fflush(stdout);
+
   for (int step = 1; step <= nSteps; step++) {
 
     const double tStart = omp_get_wtime(); // Start timing
