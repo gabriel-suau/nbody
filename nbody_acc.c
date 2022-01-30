@@ -60,7 +60,7 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
 
 void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle) {
   if (f == NULL) return;
-#pragma acc update host(particle[i])
+#pragma acc update host(particle[i:i])
   fprintf(f, "%d, %e %e %e %e %e %e\n",
           step, particle[i].x, particle[i].y, particle[i].z,
           particle[i].vx, particle[i].vy, particle[i].vz);
