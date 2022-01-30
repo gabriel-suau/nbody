@@ -30,8 +30,9 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
         const float dy = particle[j].y - particle[i].y;
         const float dz = particle[j].z - particle[i].z;
         const float drSquared  = dx*dx + dy*dy + dz*dz + softening;
-        const float drPower32  = pow(drSquared, 3.0/2.0);
-            
+        /* const float drPower32  = pow(drSquared, 3.0/2.0); */
+        const float drPower32  = drSquared*sqrtf(drSquared);
+
         // Calculate the net force
         Fx += dx / drPower32;  
         Fy += dy / drPower32;  
@@ -48,7 +49,6 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
 
   // Move particles according to their velocities
   // O(N) work, so using a serial loop
-#pragma omp parallel for
   for (int i = 0 ; i < nParticles; i++) { 
     particle[i].x  += particle[i].vx*dt;
     particle[i].y  += particle[i].vy*dt;

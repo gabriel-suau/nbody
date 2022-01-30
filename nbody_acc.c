@@ -3,7 +3,7 @@
 #include <stdlib.h> // drand48
 #include <omp.h>
 
-//#define DUMP
+#define DUMP
 
 struct ParticleType { 
   float x, y, z;
@@ -58,10 +58,18 @@ void MoveParticles(const int nParticles, struct ParticleType* const particle, co
   }
 }
 
+void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle) {
+  if (f == NULL) return;
+#pragma acc update host(particle[i])
+  fprintf(f, "%d, %e %e %e %e %e %e\n",
+          step, particle[i].x, particle[i].y, particle[i].z,
+          particle[i].vx, particle[i].vy, particle[i].vz);
+}
+
 void dump(int iter, int nParticles, struct ParticleType* particle)
 {
     char filename[64];
-    snprintf(filename, 64, "output_%d.txt", iter);
+    snprintf(filename, 64, "results/output_%d.txt", iter);
 
     FILE *f;
     f = fopen(filename, "w+");
@@ -88,6 +96,10 @@ int main(const int argc, const char** argv)
   // Particle propagation time step
   const float dt = 0.0005f;
 
+  // File to follow 1 particle
+  FILE *file;
+  file = fopen("results/one_particle.txt", "w");
+
   struct ParticleType* particle = malloc(nParticles*sizeof(struct ParticleType));
 
   // Initialize random number generator and particles
@@ -103,7 +115,7 @@ int main(const int argc, const char** argv)
      particle[i].vy = 2.0*drand48() - 1.0;
      particle[i].vz = 2.0*drand48() - 1.0;
   }
-  
+
   // Perform benchmark
   printf("\nPropagating %d particles using 1 thread...\n\n", 
 	 nParticles
@@ -132,8 +144,11 @@ int main(const int argc, const char** argv)
 
 #ifdef DUMP
     dump(step, nParticles, particle);
+    dump_1_part(step, file, 0, particle);
 #endif
   }
+
+  fclose(file);
   rate/=(double)(nSteps-skipSteps); 
   dRate=sqrt(dRate/(double)(nSteps-skipSteps)-rate*rate);
   printf("-----------------------------------------------------\n");
@@ -142,5 +157,6 @@ int main(const int argc, const char** argv)
   printf("-----------------------------------------------------\n");
   printf("* - warm-up, not included in average\n\n");
   free(particle);
+
   #pragma acc wait(1)
 }
