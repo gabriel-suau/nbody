@@ -162,7 +162,7 @@ int main(const int argc, const char** argv)
   file = fopen("results/one_particle.txt", "w");
 
   int size = nParticles*sizeof(struct ParticleType);
-  struct ParticleType* particle = malloc(size);
+  struct ParticleType* particle = (struct ParticleType*) malloc(size);
   struct ParticleType* particle_d;
   CUDA_SAFE_CALL(cudaMalloc((void **) &particle_d, size));
 
