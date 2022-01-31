@@ -6,6 +6,7 @@ all:
 	make nbody
 	make nbody_omp
 	make nbody_acc
+	make nbody_cuda
 
 nbody: nbody.c
 	$(CC) nbody.c -o nbody $(OPT)
@@ -16,5 +17,8 @@ nbody_omp: nbody_omp.c
 nbody_acc: nbody_acc.c
 	$(CC) nbody_acc.c -o nbody_acc $(OPT)
 
+nbody_cuda: nbody_cuda.cu
+	$(CC) nbody_cuda.cu -o nbody_cuda $(OPT)
+
 clean:
-	rm -f nbody nbody_omp nbody_acc
+	rm -f nbody nbody_omp nbody_acc nbody_cuda
