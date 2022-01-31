@@ -8,6 +8,8 @@
 
 #define DUMP
 
+#define BLOCK_SIZE 512
+
 #define CUDA_SAFE_CALL( __call)                                         \
   do {                                                                  \
     cudaError_t __err = __call;                                         \
@@ -34,7 +36,7 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
   int i, j;
   float Fx = 0.0, Fy = 0.0, Fz = 0.0;
 
-  i = threadIdx.x;
+  i = threadIdx.x + blockIdx.x * blockDim.x;
 
   for (j = 0 ; j < nParticles ; j++) {
     if (i != j) {
@@ -146,7 +148,7 @@ int main(const int argc, const char** argv)
   for (int step = 1; step <= nSteps; step++) {
 
     const double tStart = 0; // Start timing
-    MoveParticles<<<1, nParticles>>>(nParticles, particle_d, dt);
+    MoveParticles<<<nParticles/BLOCK_SIZE, BLOCK_SIZE, nParticles>>>(nParticles, particle_d, dt);
     const double tEnd = 1; // End timing
 
     runtime += tEnd - tStart;
