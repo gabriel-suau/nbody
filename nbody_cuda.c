@@ -194,7 +194,7 @@ int main(const int argc, const char** argv)
   for (int step = 1; step <= nSteps; step++) {
 
     const double tStart = 0; // Start timing
-    MoveParticles<<<1, size>>>(nParticles, particle, dt);
+    MoveParticles<<<1, size>>>(nParticles, particle_d, dt);
     const double tEnd = 1; // End timing
 
     runtime += tEnd - tStart;
@@ -211,7 +211,6 @@ int main(const int argc, const char** argv)
     fflush(stdout);
 
 #ifdef DUMP
-    cudaDeviceSynchronize();
     dump(step, nParticles, particle, particle_d);
     dump_1_part(step, file, 0, particle, particle_d);
 #endif
