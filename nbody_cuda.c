@@ -211,6 +211,7 @@ int main(const int argc, const char** argv)
     fflush(stdout);
 
 #ifdef DUMP
+    cudaDeviceSynchronize();
     dump(step, nParticles, particle, particle_d);
     dump_1_part(step, file, 0, particle, particle_d);
 #endif
