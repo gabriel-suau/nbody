@@ -6,7 +6,7 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-/* #define DUMP */
+#define DUMP
 
 #define CUDA_SAFE_CALL( __call)                                         \
   do {                                                                  \
