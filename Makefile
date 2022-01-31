@@ -1,5 +1,5 @@
 # CC := gcc -fopenmp -openacc
-CC := nvc -Minfo=all -acc -fopenmp
+CC := nvcc -Minfo=all -acc -fopenmp
 OPT := -lm -O3
 
 all:

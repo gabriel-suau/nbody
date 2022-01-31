@@ -117,7 +117,7 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
 void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle, struct ParticleType* particle_d) {
   if (f == NULL) return;
 
-  CUDA_SAFE_CALL(cudaMemcpy(particle, particle_d, nParticles * sizeof(struct ParticleType), cudaMemcpyDeviceToHost));
+  CUDA_SAFE_CALL(cudaMemcpy(&particle[i], &particle_d[i], sizeof(struct ParticleType), cudaMemcpyDeviceToHost));
 
   fprintf(f, "%d, %e %e %e %e %e %e\n",
           step, particle[i].x, particle[i].y, particle[i].z,
