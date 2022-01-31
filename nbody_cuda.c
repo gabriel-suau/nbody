@@ -185,7 +185,7 @@ int main(const int argc, const char** argv)
     }
 
   // Copy the table on the device
-  CUDA_SAFE_CALL(cudaMemcpy(particle_d, particle, size, cudaMemcpyHostToDevice));
+  /* CUDA_SAFE_CALL(cudaMemcpy(particle_d, particle, size, cudaMemcpyHostToDevice)); */
 
   // Perform benchmark
   printf("\nPropagating %d particles using 1 thread...\n\n", 
