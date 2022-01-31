@@ -1,5 +1,5 @@
 # CC := gcc -fopenmp -openacc
-CC := nvcc -Minfo=all -acc -fopenmp
+CC := nvc -Minfo=all -acc -fopenmp
 OPT := -lm -O3
 
 all:
@@ -18,7 +18,7 @@ nbody_acc: nbody_acc.c
 	$(CC) nbody_acc.c -o nbody_acc $(OPT)
 
 nbody_cuda: nbody_cuda.cu
-	$(CC) nbody_cuda.cu -o nbody_cuda $(OPT)
+	nvcc nbody_cuda.cu -o nbody_cuda $(OPT)
 
 clean:
 	rm -f nbody nbody_omp nbody_acc nbody_cuda
