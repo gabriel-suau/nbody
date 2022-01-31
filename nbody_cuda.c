@@ -214,7 +214,7 @@ int main(const int argc, const char** argv)
     dump(step, nParticles, particle, particle_d);
     dump_1_part(step, file, 0, particle, particle_d);
 #endif
-    particle[0] = step * 1.0;
+    particle[0] = {step * 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
   }
 
   fclose(file);
