@@ -60,7 +60,7 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
   particle[i].vy += dt*Fy; 
   particle[i].vz += dt*Fz;
 
-  __syncthreads();
+  /* __syncthreads(); */
 
   // Move particles according to their velocities
   particle[i].x  += particle[i].vx*dt;
@@ -68,51 +68,6 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
   particle[i].z  += particle[i].vz*dt;
 }
 
-/* void MoveParticles(const int nParticles, struct ParticleType* const particle, const float dt) { */
-
-/*   // Loop over particles that experience force */
-/*   for (int i = 0; i < nParticles; i++) {  */
-
-/*     // Components of the gravity force on particle i */
-/*     float Fx = 0, Fy = 0, Fz = 0; */
-      
-/*     // Loop over particles that exert force */
-/*     for (int j = 0; j < nParticles; j++) { */
-/*       // No self interaction */
-/*       if (i != j) { */
-/*         // Avoid singularity and interaction with self */
-/*         const float softening = 1e-20; */
-
-/*         // Newton's law of universal gravity */
-/*         const float dx = particle[j].x - particle[i].x; */
-/*         const float dy = particle[j].y - particle[i].y; */
-/*         const float dz = particle[j].z - particle[i].z; */
-/*         const float drSquared  = dx*dx + dy*dy + dz*dz + softening; */
-/*         /\* const float drPower32  = pow(drSquared, 3.0/2.0); *\/ */
-/*         const float drPower32  = drSquared*sqrtf(drSquared); */
-
-/*         // Calculate the net force */
-/*         Fx += dx / drPower32; */
-/*         Fy += dy / drPower32; */
-/*         Fz += dz / drPower32; */
-/*       } */
-
-/*     } */
-
-/*     // Accelerate particles in response to the gravitational force */
-/*     particle[i].vx += dt*Fx;  */
-/*     particle[i].vy += dt*Fy;  */
-/*     particle[i].vz += dt*Fz; */
-/*   } */
-
-/*   // Move particles according to their velocities */
-/*   // O(N) work, so using a serial loop */
-/*   for (int i = 0 ; i < nParticles; i++) {  */
-/*     particle[i].x  += particle[i].vx*dt; */
-/*     particle[i].y  += particle[i].vy*dt; */
-/*     particle[i].z  += particle[i].vz*dt; */
-/*   } */
-/* } */
 
 void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle, struct ParticleType* particle_d) {
   if (f == NULL) return;
