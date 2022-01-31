@@ -60,8 +60,6 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
   particle[i].vy += dt*Fy; 
   particle[i].vz += dt*Fz;
 
-  /* __syncthreads(); */
-
   // Move particles according to their velocities
   particle[i].x  += particle[i].vx*dt;
   particle[i].y  += particle[i].vy*dt;
