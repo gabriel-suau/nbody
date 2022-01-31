@@ -119,6 +119,7 @@ void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle, struct
   if (f == NULL) return;
 
   CUDA_SAFE_CALL(cudaMemcpy(&particle[i], &particle_d[i], sizeof(struct ParticleType), cudaMemcpyDeviceToHost));
+  particle[i] = {step * 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
   fprintf(f, "%d, %e %e %e %e %e %e\n",
           step, particle[i].x, particle[i].y, particle[i].z,
@@ -214,7 +215,6 @@ int main(const int argc, const char** argv)
     dump(step, nParticles, particle, particle_d);
     dump_1_part(step, file, 0, particle, particle_d);
 #endif
-    particle[0] = {step * 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
   }
 
   fclose(file);
