@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h> // drand48
+#include <unistd.h>
 #include <omp.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
