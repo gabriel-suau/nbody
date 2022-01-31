@@ -148,8 +148,8 @@ int main(const int argc, const char** argv)
   for (int step = 1; step <= nSteps; step++) {
 
     const double tStart = 0; // Start timing
-    /* MoveParticles<<<nParticles/BLOCK_SIZE, BLOCK_SIZE>>>(nParticles, particle_d, dt); */
-    MoveParticles<<<1, nParticles>>>(nParticles, particle_d, dt);
+    MoveParticles<<<nParticles/BLOCK_SIZE, BLOCK_SIZE>>>(nParticles, particle_d, dt);
+    /* MoveParticles<<<1, nParticles>>>(nParticles, particle_d, dt); */
     const double tEnd = 1; // End timing
 
     runtime += tEnd - tStart;
