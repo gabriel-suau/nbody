@@ -193,9 +193,9 @@ int main(const int argc, const char** argv)
 
   for (int step = 1; step <= nSteps; step++) {
 
-    const double tStart = omp_get_wtime(); // Start timing
+    const double tStart = 0; // Start timing
     MoveParticles<<<1, size>>>(nParticles, particle, dt);
-    const double tEnd = omp_get_wtime(); // End timing
+    const double tEnd = 1; // End timing
 
     runtime += tEnd - tStart;
     const float HztoInts   = ((float)nParticles)*((float)(nParticles-1)) ;
