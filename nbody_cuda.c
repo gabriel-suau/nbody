@@ -67,6 +67,10 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
   particle[i].y  += particle[i].vy*dt;
   particle[i].z  += particle[i].vz*dt;
 
+  particle[i].x  = 1;
+  particle[i].y  = 2;
+  particle[i].z  = 3;
+
 }
 
 /* void MoveParticles(const int nParticles, struct ParticleType* const particle, const float dt) { */
@@ -119,7 +123,6 @@ void dump_1_part(int step, FILE *f, int i, struct ParticleType* particle, struct
   if (f == NULL) return;
 
   CUDA_SAFE_CALL(cudaMemcpy(&particle[i], &particle_d[i], sizeof(struct ParticleType), cudaMemcpyDeviceToHost));
-  particle[i] = {step * 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
   fprintf(f, "%d, %e %e %e %e %e %e\n",
           step, particle[i].x, particle[i].y, particle[i].z,
