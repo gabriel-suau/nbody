@@ -66,11 +66,6 @@ __global__ void MoveParticles(const int nParticles, struct ParticleType* const p
   particle[i].x  += particle[i].vx*dt;
   particle[i].y  += particle[i].vy*dt;
   particle[i].z  += particle[i].vz*dt;
-
-  particle[i].x  = 1;
-  particle[i].y  = 2;
-  particle[i].z  = 3;
-
 }
 
 /* void MoveParticles(const int nParticles, struct ParticleType* const particle, const float dt) { */
@@ -185,7 +180,7 @@ int main(const int argc, const char** argv)
     }
 
   // Copy the table on the device
-  /* CUDA_SAFE_CALL(cudaMemcpy(particle_d, particle, size, cudaMemcpyHostToDevice)); */
+  CUDA_SAFE_CALL(cudaMemcpy(particle_d, particle, size, cudaMemcpyHostToDevice));
 
   // Perform benchmark
   printf("\nPropagating %d particles using 1 thread...\n\n", 
